@@ -11,7 +11,6 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 
 urlpatterns = [
-    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # Wagtail
     re_path(r'^cms/', include(wagtailadmin_urls)),
