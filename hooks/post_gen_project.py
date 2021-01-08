@@ -157,15 +157,6 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
         production_postgres_envs_path, value=DEBUG_VALUE if debug else None
     )
 
-    set_celery_flower_user(local_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        local_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
-    set_celery_flower_user(production_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        production_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
-
 
 def set_flags_in_settings_files():
     set_django_secret_key(os.path.join("config", "settings", "local.py"))
