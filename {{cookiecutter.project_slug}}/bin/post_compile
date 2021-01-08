@@ -17,6 +17,6 @@ END
 
 if compress_enabled
 then
-  python manage.py compress
+  pipenv run ./manage.py compress
 fi
-python manage.py collectstatic --noinput
+pipenv run ./manage.py collectstatic --noinput
