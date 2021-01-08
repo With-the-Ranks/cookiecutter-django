@@ -43,24 +43,6 @@ jobs:
 
       - name: Checkout Code Repository
         uses: actions/checkout@v2
-      {% if cookiecutter.use_docker == 'y' -%}
-
-      - name: Build the Stack
-        run:  docker-compose -f local.yml build
-
-      - name: Make DB Migrations
-        run:  docker-compose -f local.yml run --rm django python manage.py migrate
-
-      - name: Run the Stack
-        run:  docker-compose -f local.yml up -d
-
-      - name: Run Django Tests
-        run:  docker-compose -f local.yml exec -T django pytest
-
-      - name: Tear down the Stack
-        run:  docker-compose down
-
-      {%- else %}
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
@@ -92,4 +74,3 @@ jobs:
       - name: Test with pytest
         run:  pytest
 
-      {%- endif %}
