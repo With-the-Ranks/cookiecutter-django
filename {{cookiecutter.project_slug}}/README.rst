@@ -17,13 +17,13 @@ Setup
 
 ::
 
-$ git clone https://github.com/With-the-Ranks/{{cookiecutter.project_name}}.git
+$ git clone https://github.com/With-the-Ranks/{{cookiecutter.project_slug}}.git
 
 2. Create pipenv environment
 
 ::
 
-$ cd {{cookiecutter.project_name}}
+$ cd {{cookiecutter.project_slug}}
 $ pipenv --python 3.8.5
 $ pipenv install
 
@@ -43,7 +43,7 @@ $ npm run build
 
 ::
 
-$ createdb {{cookiecutter.project_name}}
+$ createdb {{cookiecutter.project_slug}}
 
 6. Run migrations
 
