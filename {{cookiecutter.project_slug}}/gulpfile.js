@@ -9,7 +9,9 @@ const pjson = require('./package.json')
 // Plugins
 const autoprefixer = require('autoprefixer')
 const browserSync = require('browser-sync').create()
+
 const concat = require('gulp-concat')
+
 const cssnano = require ('cssnano')
 const imagemin = require('gulp-imagemin')
 const pixrem = require('pixrem')
@@ -23,16 +25,18 @@ const uglify = require('gulp-uglify-es').default
 
 // Relative paths function
 function pathsConfig(appName) {
-  this.app = `./${pjson.name}`
+  this.app = `./${pjson.name}/core`
   const vendorsRoot = 'node_modules'
 
   return {
+
     bootstrapSass: `${vendorsRoot}/bootstrap/scss`,
     vendorsJs: [
-      `${vendorsRoot}/jquery/dist/jquery.slim.js`,
+      `${vendorsRoot}/jquery/dist/jquery.js`,
       `${vendorsRoot}/popper.js/dist/umd/popper.js`,
       `${vendorsRoot}/bootstrap/dist/js/bootstrap.js`,
     ],
+
     app: this.app,
     templates: `${this.app}/templates`,
     css: `${this.app}/static/css`,
@@ -63,7 +67,9 @@ function styles() {
   return src(`${paths.sass}/project.scss`)
     .pipe(sass({
       includePaths: [
+
         paths.bootstrapSass,
+
         paths.sass
       ]
     }).on('error', sass.logError))
@@ -84,6 +90,7 @@ function scripts() {
     .pipe(dest(paths.js))
 }
 
+
 // Vendor Javascript minification
 function vendorScripts() {
   return src(paths.vendorsJs)
@@ -95,12 +102,14 @@ function vendorScripts() {
     .pipe(dest(paths.js))
 }
 
+
 // Image compression
 function imgCompression() {
   return src(`${paths.images}/*`)
     .pipe(imagemin()) // Compresses PNG, JPEG, GIF and SVG images
     .pipe(dest(paths.images))
 }
+
 
 // Run django server
 function runServer(cb) {
@@ -121,6 +130,7 @@ function initBrowserSync() {
       ], {
         // https://www.browsersync.io/docs/options/#option-proxy
         proxy: 'localhost:8000'
+
       }
     )
 }
