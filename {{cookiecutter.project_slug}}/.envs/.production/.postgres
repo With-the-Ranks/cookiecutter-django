@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=more_perfect_union
+POSTGRES_USER=PiyDidSsPFpmpVbJPlGjlDmZsZDNMpQA
+POSTGRES_PASSWORD=csUbh07B37E6VWKpgW8qEzJ0LgZ2vrt29xgptYFkYXZe4TpWmalkxWeh7brj0amF
