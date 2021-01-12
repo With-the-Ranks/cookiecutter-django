@@ -195,5 +195,27 @@ LOGGING = {
     },
 }
 
+{% if cookiecutter.set_up_cloudflare == "y" -%}
+
+# FRONT END CACHING
+
+# https://docs.wagtail.io/en/v2.9.3/reference/contrib/frontendcache.html
+CACHE_FRONTEND_ENABLED = env.bool('CACHE_FRONTEND_ENABLED', default=False)
+
+INSTALLED_APPS += ["wagtail.contrib.frontend_cache"]
+
+CLOUDFLARE_URL = "https://api.cloudflare.com/client/v4"
+CLOUDFLARE_ZONE_ID = env.str("CLOUDFLARE_ZONE_ID", default=None)
+CLOUDFLARE_BEARER_TOKEN = env.str("CLOUDFLARE_BEARER_TOKEN", default=None)
+
+WAGTAILFRONTENDCACHE = {
+    'cloudflare': {
+        'BACKEND': 'wagtail.contrib.frontend_cache.backends.CloudflareBackend',
+        'BEARER_TOKEN': CLOUDFLARE_BEARER_TOKEN,
+        'ZONEID': CLOUDFLARE_ZONE_ID,
+    },
+}
+
+{%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------
