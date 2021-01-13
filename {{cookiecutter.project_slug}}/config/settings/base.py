@@ -87,7 +87,10 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     # Your stuff: custom apps go here
-    '{{ cookiecutter.project_slug }}.core'
+    '{{ cookiecutter.project_slug }}.core',
+    {%- if cookiecutter.add_home_page_model == 'y' %}
+    '{{ cookiecutter.project_slug }}.home_page',
+    {%- endif %}
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
