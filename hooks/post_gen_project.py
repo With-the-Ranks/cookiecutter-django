@@ -31,13 +31,6 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 DEBUG_VALUE = "debug"
 
 
-def append_to_project_gitignore(path):
-    gitignore_file_path = ".gitignore"
-    with open(gitignore_file_path, "a") as gitignore_file:
-        gitignore_file.write(path)
-        gitignore_file.write(os.linesep)
-
-
 def generate_random_string(
     length, using_digits=False, using_ascii_letters=False, using_punctuation=False
 ):
@@ -96,60 +89,22 @@ def set_django_secret_key(file_path):
     return django_secret_key
 
 
-def set_django_admin_url(file_path):
-    django_admin_url = set_flag(
-        file_path,
-        "!!!SET DJANGO_ADMIN_URL!!!",
-        formatted="{}/",
-        length=32,
-        using_digits=True,
-        using_ascii_letters=True,
-    )
-    return django_admin_url
-
-
-def generate_random_user():
-    return generate_random_string(length=32, using_ascii_letters=True)
-
-
-def generate_postgres_user(debug=False):
-    return DEBUG_VALUE if debug else generate_random_user()
-
-
-def set_postgres_user(file_path, value):
-    postgres_user = set_flag(file_path, "!!!SET POSTGRES_USER!!!", value=value)
-    return postgres_user
-
-
-def set_postgres_password(file_path, value=None):
-    postgres_password = set_flag(
-        file_path,
-        "!!!SET POSTGRES_PASSWORD!!!",
-        value=value,
-        length=64,
-        using_digits=True,
-        using_ascii_letters=True,
-    )
-    return postgres_password
-
-
-def append_to_gitignore_file(s):
-    with open(".gitignore", "a") as gitignore_file:
-        gitignore_file.write(s)
-        gitignore_file.write(os.linesep)
-
-
 def set_flags_in_settings_files():
     set_django_secret_key(os.path.join("config", "settings", "local.py"))
     set_django_secret_key(os.path.join("config", "settings", "test.py"))
 
 
-def remove_storages_module():
-    os.remove(os.path.join("{{cookiecutter.project_slug}}", "utils", "storages.py"))
+def remove_home_page_model():
+    home_page_path = os.path.join("{{cookiecutter.project_slug}}", "home_page")
+    if os.path.exists(home_page_path):
+        shutil.rmtree(home_page_path)
 
 
 def main():
     set_flags_in_settings_files()
+
+    if "{{ cookiecutter.add_home_page_model }}".lower() == "n":
+        remove_home_page_model()
 
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 

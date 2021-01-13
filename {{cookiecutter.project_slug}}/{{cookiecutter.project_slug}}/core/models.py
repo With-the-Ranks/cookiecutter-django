@@ -1,9 +1,12 @@
 from django.db import models
 
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page
+from wagtail.core import blocks
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, StreamFieldPanel
 
 CHARFIELD_LONG_LENGTH = 256
 
@@ -40,6 +43,112 @@ class BasePage(Page):
 
     promote_panels = Page.promote_panels + [
         ImageChooserPanel('meta_image'),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class CommonHeroPageFields(models.Model):
+    # Hero Section
+    hero_copy = RichTextField(
+        features=['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'link', 'document-link'],
+        blank=True,
+        null=True
+    )
+    hero_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+    hero_video = models.URLField(
+        blank=True,
+        null=True,
+        help_text="URL to video that supports the oEmbed protocol, such as a link to a YouTube or Vimeo video. If a video is present, hero image will not display."
+    )
+    hero_signup_enabled = models.BooleanField(default=False)
+
+    content_panels = [
+        MultiFieldPanel([
+            FieldPanel('hero_copy'),
+            ImageChooserPanel('hero_image'),
+            FieldPanel('hero_video'),
+            FieldPanel('hero_signup_enabled'),
+        ], heading="Hero Content"),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+# Reusable ContentStreamField
+class ContentStreamField(models.Model):
+    content = StreamField([
+        ('content_section', blocks.StructBlock([
+            ('background', blocks.StructBlock([
+                ('color', blocks.ChoiceBlock(
+                    help_text="Color of background for the content section. It is recommended to alternate background colors to create visual sepration between content sections.",
+                    required=True,
+                    choices=[
+                        ('light', 'Light'),
+                        ('dark', 'Dark'),
+                    ]
+                )),
+                ('image', ImageChooserBlock(required=False))
+            ])),
+            ('content_options', blocks.StreamBlock([
+                ('copy', blocks.StructBlock([
+                    ('richtext', blocks.RichTextBlock()),
+                    ('text_alignment', blocks.ChoiceBlock(
+                        choices=[
+                            ('left', 'Left Aligned'),
+                            ('center', 'Center Aligned'),
+                            ('right', 'Right Aligned'),
+                        ],
+                        default='left'
+                    )),
+                ], icon="pilcrow")),
+                ('page_feed_block', blocks.PageChooserBlock(
+                    required=True,
+                    page_type="list_page.ListPage",
+                    help_text="Choose the ListPage (e.g. Issues or Endorsements) that you'd like to add cards for. The first 3 items on this page will be rendered here, along with a link to the page.",
+                    icon="list-ol")),
+                ('cards_block', blocks.ListBlock(
+                    blocks.StructBlock([
+                        ('copy', blocks.RichTextBlock(required=True)),
+                        ('image', ImageChooserBlock(required=False)),
+                        ('link', blocks.URLBlock(required=False)),
+                        ('page', blocks.PageChooserBlock(required=False, help_text="Button page will override button URL if present.")),
+                    ]), icon="grip"
+                )),
+                ('signup_block', blocks.RawHTMLBlock(required=True, help_text="Insert the HTML embed code from the VAN link you would like to embed here.",icon="form")),
+                ('blockquote', blocks.BlockQuoteBlock(icon="openquote")),
+                ('donation_block', blocks.StructBlock([
+                    ('copy', blocks.RichTextBlock()),
+                    ('image', ImageChooserBlock(required=False)),
+                    ('refcode', blocks.CharBlock(required=False, help_text="Add a custom ActBlue refcode, if desired. If this is blank, we will use the default ActBlue refcode.")),
+                ], icon="plus")),
+                ('button_block', blocks.StructBlock([
+                    ('copy', blocks.CharBlock(required=True)),
+                    ('link', blocks.URLBlock(required=False)),
+                    ('page', blocks.PageChooserBlock(required=False, help_text="Button page will override button URL if present.")),
+                    ('alignment', blocks.ChoiceBlock(
+                        choices=[
+                            ('left', 'Left Aligned'),
+                            ('center', 'Center Aligned'),
+                            ('right', 'Right Aligned'),
+                        ],
+                        default='left'
+                    )),
+                ], icon="link")),
+            ], required=False))
+        ], icon="edit"))
+    ], blank=True)
+
+    content_stream_field_panels = [
+        StreamFieldPanel('content')
     ]
 
     class Meta:

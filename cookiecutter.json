@@ -7,5 +7,6 @@
   "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
   "version": "0.1.0",
   "timezone": "UTC",
-  "set_up_cloudflare": "y"
+  "set_up_cloudflare": "y",
+  "add_home_page_model": "y"
 }
