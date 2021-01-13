@@ -110,11 +110,6 @@ class ContentStreamField(models.Model):
                         default='left'
                     )),
                 ], icon="pilcrow")),
-                ('page_feed_block', blocks.PageChooserBlock(
-                    required=True,
-                    page_type="list_page.ListPage",
-                    help_text="Choose the ListPage (e.g. Issues or Endorsements) that you'd like to add cards for. The first 3 items on this page will be rendered here, along with a link to the page.",
-                    icon="list-ol")),
                 ('cards_block', blocks.ListBlock(
                     blocks.StructBlock([
                         ('copy', blocks.RichTextBlock(required=True)),
